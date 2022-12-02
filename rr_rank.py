@@ -24,7 +24,8 @@ def generate_offsets(numlists: int) -> List[float]:
 
     for i in range(1, len(offsets)):
         offsets[i] = offsets[i - 1] + 0.001
-        # 0.001 is small emnough to not interfere with rr ranking since result-lists should contain less than 100 items.
+        # 0.001 is small emnough to not interfere with rr ranking since result-lists
+        # should contain less than 100 items.
 
     # random shuffling ensures that we are being fair to CGs and each CG is getting an
     # equal chance of being at rank 1 even under round-robin ranking.
@@ -49,5 +50,16 @@ def rr_rank(results: List[List[Item]]) -> List[Item]:
                 rr_items[id_to_idx[item.id]].rank_feature += (
                     rank_to_feature(item_idx + 1) + offsets[res_idx]
                 )
+                if (
+                    rr_items[id_to_idx[item.id]].item.cg1_feature is None
+                    and item.cg1_feature is not None
+                ):
+                    rr_items[id_to_idx[item.id]].item.cg1_feature = item.cg1_feature
+                if (
+                    rr_items[id_to_idx[item.id]].item.cg2_feature is None
+                    and item.cg2_feature is not None
+                ):
+                    rr_items[id_to_idx[item.id]].item.cg2_feature = item.cg2_feature
+
     rr_items.sort(key=lambda x: x.rank_feature, reverse=True)
     return [x.item for x in rr_items]
