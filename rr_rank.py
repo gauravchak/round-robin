@@ -1,8 +1,8 @@
 """round robin ranker"""
 from dataclasses import dataclass
 from typing import List
-from item import Item
 from random import shuffle
+from item import Item
 
 
 @dataclass
